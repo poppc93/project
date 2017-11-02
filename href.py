@@ -29,9 +29,9 @@ def getDate(url):
 def clean(title):
     spl = re.split('▶', title)
     spl2 = re.split('nfunction', spl[0])
-    cleaned = re.sub('[A-Za-z0-9\._+]+@[A-Za-z]+\.(co.kr|com|net)', '', spl2[0]) #이메일제거
+    cleaned = re.sub('[A-Za-z0-9\._+]+@[A-Za-z]+\.(co.kr|com|net)', '', spl2[1]) #이메일제거
     cleaned = re.sub('[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]', '', cleaned) #기타기호 제거
-    cleaned = re.sub('(  n|tnt| n|flashremoveCallback|flash)', '', cleaned)
+    cleaned = re.sub('( n|tnt| n|flashremoveCallback|flash)', '', cleaned)
     return cleaned
 
 def getArticleLinks(articleURL):
@@ -48,12 +48,12 @@ for a in links:
     title = a.attrs['title']
     body = getBody(hyperlink)
     date = getDate(hyperlink)
-    #print(title)
-    #print(date)
-    #print(clean(body) + '\n\n')
+    print(title)
+    print(date)
+    print(clean(body) + '\n\n')
     
-    file.write(title+'\n')
-    file.write(date+'\n')
-    file.write(clean(body)+'\n')
+   # file.write(title+'\n')
+   # file.write(date+'\n')
+    #file.write(clean(body)+'\n')
 file.close()
 
