@@ -23,17 +23,14 @@ def getDate(url):
     date = re.sub('[\'\[\]]', '', date) # '과 대괄호 제거
     return date
 
+
 def clean(title):
     spl = re.split('▶', title)
-    spl2 = re.split('ⓒ', spl[0])
-    cleaned = re.sub('[A-Za-z0-9\._+]+@[A-Za-z]+\.(co.kr|com|net)', '', spl2[0]) #이메일제거
+    spl2 = re.split('nfunction', spl[0])
+    spl3 = re.split('ⓒ', spl2[1])
+    cleaned = re.sub('[A-Za-z0-9\._+]+@[A-Za-z]+\.(co.kr|com|net)', '', spl3[0]) #이메일제거
     cleaned = re.sub('[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]', '', cleaned) #기타기호 제거
-    cleaned = re.sub('(nfunction flashremoveCallback|flash)', '', cleaned)
-    cleaned = re.sub('(본문 내용|TV플레이어)', '', cleaned)
-    cleaned = re.sub('(n )', '', cleaned)
-    cleaned = re.sub('(오류를 우회하기 위한 함수 추가 )', '', cleaned)
-    cleaned = re.sub('(           )', '', cleaned)
-    
+    cleaned = re.sub('(  n|tnt| n|flashremoveCallback|flash)', '', cleaned)
     return cleaned
 
 def getArticleLinks(articleURL):
@@ -44,15 +41,14 @@ def getArticleLinks(articleURL):
 
 links = getArticleLinks("/main.nhn?mode=LSD&mid=shm&sid1=101")
 
-file = open("output.txt", 'a')
+file = open("output.txt", 'a', -1, 'utf-8')
 for a in links:
     hyperlink = a.attrs['href']
     title = a.attrs['title']
     body = getBody(hyperlink)
     date = getDate(hyperlink)
-    #file.write(title)
-  #  print(title)
-   # print(date)
+    #print(title)
+    #print(date)
     #print(clean(body) + '\n\n')
     
     file.write(title+'\n')
