@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
@@ -27,8 +29,7 @@ def getDate(url):
 def clean(title):
     spl = re.split('▶', title)
     spl2 = re.split('nfunction', spl[0])
-    spl3 = re.split('ⓒ', spl2[1])
-    cleaned = re.sub('[A-Za-z0-9\._+]+@[A-Za-z]+\.(co.kr|com|net)', '', spl3[0]) #이메일제거
+    cleaned = re.sub('[A-Za-z0-9\._+]+@[A-Za-z]+\.(co.kr|com|net)', '', spl2[0]) #이메일제거
     cleaned = re.sub('[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]', '', cleaned) #기타기호 제거
     cleaned = re.sub('(  n|tnt| n|flashremoveCallback|flash)', '', cleaned)
     return cleaned
@@ -41,7 +42,7 @@ def getArticleLinks(articleURL):
 
 links = getArticleLinks("/main.nhn?mode=LSD&mid=shm&sid1=101")
 
-file = open("output.txt", 'a', -1, 'utf-8')
+file = open("output.txt", 'a')
 for a in links:
     hyperlink = a.attrs['href']
     title = a.attrs['title']
