@@ -24,7 +24,9 @@ def getDate(url):
     return date
 
 def clean(title):
-    cleaned = re.sub('[A-Za-z0-9\._+]+@[A-Za-z]+\.(co.kr|com|net)', '', title) #이메일제거
+    spl = re.split('▶', title)
+    spl2 = re.split('ⓒ', spl[0])
+    cleaned = re.sub('[A-Za-z0-9\._+]+@[A-Za-z]+\.(co.kr|com|net)', '', spl2[0]) #이메일제거
     cleaned = re.sub('[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]', '', cleaned) #기타기호 제거
     cleaned = re.sub('(nfunction flashremoveCallback|flash)', '', cleaned)
     cleaned = re.sub('(본문 내용|TV플레이어)', '', cleaned)
@@ -48,15 +50,13 @@ for a in links:
     title = a.attrs['title']
     body = getBody(hyperlink)
     date = getDate(hyperlink)
-    print(title)
-    print('\n')
-    print(date)
-    print('\n')
-    print(clean(body) + '\n')
     #file.write(title)
-    #file.write('\n')
-    #file.write(date)
-    #file.write('\n')
-    #file.write(clean(body) + '\n')
+  #  print(title)
+   # print(date)
+    #print(clean(body) + '\n\n')
+    
+    file.write(title+'\n')
+    file.write(date+'\n')
+    file.write(clean(body)+'\n')
 file.close()
 
