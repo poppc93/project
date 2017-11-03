@@ -1,6 +1,7 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
+from datetime import datetime
 
 def getArticle(url):
     html = urlopen(url)
@@ -26,23 +27,30 @@ def clean(body): #기사 본문 내용에서 기사내용과 관련없는 내용
     spl2 = re.split('Callback n n ', cleaned) #기사와 관련없는 문자 제거
     return spl2[1]
 
-def getArticleLinks(page):
-    html = urlopen("http://news.naver.com/main/main.nhn?mode=LSD&mid=shm&sid1=101"+page) #기준이 되는 페이지는 네이버뉴스 경제 홈
+def getArticleLinks(i):
+    year = str(datetime.today().year)
+    month = datetime.today().month
+    if(month<10): #1월부터 9월이면 0x형태의 문자열로 입력
+        month = '0' + str(month)
+    else:
+        month = str(month)
+    date = datetime.today().day
+    if(date<10): #1일부터 9일이면 0x형태의 문쟈열로 입력
+        date = '0' + str(date)
+    else:
+        date = str(date)
+    page = "#&date="+year+"-"+month+"-"+date+" 00:00:00&page=1" #현재날짜의 페이지 링크
+    
+    link = "http://news.naver.com/main/main.nhn?mode=LSD&mid=shm&sid1=10"+str(i)+page
+    html = urlopen(link) #기준이 되는 페이지는 네이버뉴스 경제 홈
     bs0bj = BeautifulSoup(html, "html.parser")
-    return bs0bj.find("div", {"class":"section_body"}).findAll("a", href=re.compile("^(http://news.naver.com/main/read)"))
+    links = bs0bj.find("div", {"class":"section_body"}).findAll("a")
+    return links
     #기사의 본문으로 연결되는 하이퍼링크 반환
 
-def getPageLink(i):
-    year = "2017"
-    month = "11"
-    date = "02"
-    page = "#&date="+year+"-"+month+"-"+date+" 00:00:00&page="+ str(i)
-    return page #기사 홈에서 페이지링크를 가져온다
-
-file = open("output.txt", 'a', -1,'utf-16')
-for i in range(1, 5):
-    page = getPageLink(i)
-    links = getArticleLinks(page)
+file = open("output.txt", 'w', -1,'utf-16')
+for i in range(0, 3): #0=정치, 1=경제, 2=사회, 3=생활/문화 홈을 차례로 방문
+    links = getArticleLinks(i)
     for a in links:
         try:
             hyperlink = a.attrs['href']
@@ -55,7 +63,7 @@ for i in range(1, 5):
             file.write(title+'\n')
             file.write(article[1]+'\n')
             file.write(clean(article[0])+'\n')
-        except UnicodeEncodeError as e:
+        except UnicodeEncodeError as e: #유니코드 인코드 에러 발생시.
             print("Unicode Enconde Error")
        
 file.close()
