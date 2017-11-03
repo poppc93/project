@@ -48,9 +48,9 @@ for i in range(1, 5):
             hyperlink = a.attrs['href']
             title = a.attrs['title']
             article = getArticle(hyperlink)
-            print(title)
-            print(article[1])
-            print(clean(article[0]) + '\n\n')
+            #print(title)
+            #print(article[1])
+            #print(clean(article[0]) + '\n\n')
     
             file.write(title+'\n')
             file.write(article[1]+'\n')
